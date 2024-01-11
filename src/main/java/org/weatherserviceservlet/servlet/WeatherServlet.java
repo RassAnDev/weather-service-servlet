@@ -4,12 +4,16 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Map;
 
 /**
@@ -63,6 +67,20 @@ public class WeatherServlet extends HttpServlet {
                                 + "lat=51.666389&lon=39.169998&appid=8f48b1a2a1f1d96d71192f3b70e31e58&units=metric"
                 ),
                 new TypeReference<>() { });
+
+        ServletContext context = request.getServletContext();
+        Connection connection = (Connection) context.getAttribute("dbConnection");
+
+        String query = "INSERT INTO weather (body) VALUES (?)";
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, weatherData.get("weather").toString());
+            statement.execute();
+        } catch (SQLException e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+        }
 
         request.setAttribute("weatherData", weatherData);
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/weather.jsp");
