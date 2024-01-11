@@ -24,6 +24,8 @@ dependencies {
     implementation 'jstl:jstl:1.2'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.4'
+    implementation 'org.postgresql:postgresql:42.5.1'
+    implementation 'com.h2database:h2:2.1.214'
 
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.0-M1'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.0-M1'
